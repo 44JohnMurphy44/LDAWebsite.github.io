@@ -1,0 +1,2821 @@
+<!DOCTYPE html>
+<!-- saved from url=(0193)file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LDA — Lussier Data Architects, Inc.</title>
+<link href="./ldawebsite-10_files/css2" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a0f1e;
+    --navy2: #0d1530;
+    --navy3: #111d3c;
+    --blue: #2d7ff9;
+    --blue-bright: #6aabff;
+    --blue-dim: rgba(45,127,249,0.15);
+    --slate: #1e2a4a;
+    --border: rgba(77,143,255,0.18);
+    --text: #c8d8f0;
+    --muted: #8aafd4;
+    --white: #e8f0ff;
+    --accent-warm: #f0a050;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 4rem;
+    background: rgba(10,15,30,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+
+  .nav-logo-mark {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--blue-bright);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .nav-logo-full {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: #a8c4ff;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #a8c4ff;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--blue);
+    color: #fff !important;
+    padding: 0.55rem 1.25rem;
+    border-radius: 4px;
+    font-size: 0.78rem !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--blue-bright) !important; color: #fff !important; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 8rem 4rem 5rem;
+    overflow: hidden;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .hero-stats-row {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 2.5rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--border);
+    gap: 2rem;
+  }
+
+  /* Data pipeline background art */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .pipeline-line {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, rgba(26,108,240,0.25), transparent);
+    height: 1px;
+    width: 100%;
+    animation: scan 6s linear infinite;
+  }
+
+  .pipeline-line:nth-child(1) { top: 22%; animation-delay: 0s; animation-duration: 7s; }
+  .pipeline-line:nth-child(2) { top: 45%; animation-delay: -2.5s; animation-duration: 9s; }
+  .pipeline-line:nth-child(3) { top: 68%; animation-delay: -5s; animation-duration: 6s; }
+  .pipeline-line:nth-child(4) { top: 82%; animation-delay: -1s; animation-duration: 11s; }
+
+  @keyframes scan {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(26,108,240,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,108,240,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 60% at 70% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(26,108,240,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ─── HERO DIAGRAM ─── */
+  .hero-diagram {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.7s ease forwards;
+  }
+
+  .pipeline-svg {
+    width: 100%;
+    max-width: 860px;
+    filter: drop-shadow(0 0 40px rgba(26,108,240,0.15));
+  }
+
+  /* Node pulse rings */
+  @keyframes pulse-ring {
+    0% { r: 10; opacity: 0.6; }
+    100% { r: 20; opacity: 0; }
+  }
+
+  @keyframes flow-dash {
+    from { stroke-dashoffset: 200; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes node-glow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes data-packet {
+    0% { offset-distance: 0%; opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+  }
+
+  .pipe-path {
+    stroke-dasharray: 6 4;
+    animation: flow-dash 1.2s linear infinite;
+  }
+
+  .pipe-path-slow {
+    stroke-dasharray: 6 4;
+    animation: flow-dash 2s linear infinite;
+  }
+
+  .node-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    fill: #5a7099;
+    text-anchor: middle;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .node-title {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    fill: #c8d8f0;
+    text-anchor: middle;
+  }
+
+  .center-label {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 13px;
+    font-weight: 700;
+    fill: #e8f0ff;
+    text-anchor: middle;
+  }
+
+  .center-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 7.5px;
+    fill: #4d8fff;
+    text-anchor: middle;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .packet {
+    offset-path: path('M 80 120 Q 160 80 240 160');
+    animation: data-packet 3s ease-in-out infinite;
+  }
+  .packet2 {
+    offset-path: path('M 400 120 Q 320 80 240 160');
+    animation: data-packet 3s 0.8s ease-in-out infinite;
+  }
+  .packet3 {
+    offset-path: path('M 80 260 Q 160 220 240 160');
+    animation: data-packet 3s 1.6s ease-in-out infinite;
+  }
+  .packet4 {
+    offset-path: path('M 400 260 Q 320 220 240 160');
+    animation: data-packet 3.5s 0.4s ease-in-out infinite;
+  }
+  .packet5 {
+    offset-path: path('M 240 160 Q 240 340 240 380');
+    animation: data-packet 2.5s 1.2s ease-in-out infinite;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--blue-bright);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s ease forwards;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--blue-bright);
+  }
+
+  .hero-h1 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.8rem, 3.2vw, 3rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.75rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.35s ease forwards;
+  }
+
+  .hero-h1 .accent { color: var(--blue-bright); }
+  .hero-h1 .italic { font-style: italic; color: #a8c4ff; }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 540px;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s ease forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.65s ease forwards;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary:hover {
+    background: var(--blue-bright);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(26,108,240,0.4);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    padding: 0.85rem 2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--blue-bright);
+    color: var(--blue-bright);
+    transform: translateY(-2px);
+  }
+
+  /* Stats bar */
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 4rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeUp 0.7s 0.8s ease forwards;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {}
+
+  .stat-num {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 2rem;
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-num span { color: var(--blue-bright); }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    line-height: 1.4;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SECTION SHARED ─── */
+  section {
+    padding: 6rem 4rem;
+    position: relative;
+  }
+
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--blue-bright);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .section-tag::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--blue-bright);
+  }
+
+  .section-h2 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.9rem, 3.5vw, 3rem);
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-lead {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 560px;
+    margin-bottom: 3.5rem;
+  }
+
+  /* ─── REFERRAL WORKFLOW MODAL ─── */
+  .workflow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.75rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-bright);
+    background: rgba(45,127,249,0.08);
+    border: 1px solid rgba(45,127,249,0.25);
+    border-radius: 4px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .workflow-btn:hover {
+    background: rgba(45,127,249,0.16);
+    border-color: var(--blue-bright);
+    transform: translateY(-1px);
+  }
+  .workflow-btn svg {
+    width: 11px; height: 11px;
+    flex-shrink: 0;
+  }
+
+  .referral-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 8, 20, 0.82);
+    backdrop-filter: blur(8px);
+    z-index: 9000;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .referral-modal-overlay.open {
+    display: flex;
+  }
+
+  .referral-modal {
+    background: #0f1623;
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 18px;
+    width: 100%;
+    max-width: 820px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(59,130,246,0.1);
+    animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.94) translateY(16px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .referral-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    position: sticky;
+    top: 0;
+    background: #0f1623;
+    z-index: 2;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .referral-modal-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .referral-modal-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--blue-bright);
+  }
+  .referral-modal-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .referral-modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .referral-modal-close:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+  }
+
+  .referral-modal-body {
+    padding: 1.75rem;
+  }
+
+  /* Scoped diagram styles inside modal */
+  .referral-diagram-wrap {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .referral-diagram-wrap .rdm-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .referral-diagram-wrap .rdm-steps::before {
+    content: '';
+    position: absolute;
+    left: calc(74px + 16px);
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.16) 10%, rgba(255,255,255,0.16) 90%, transparent);
+  }
+  .referral-diagram-wrap .rdm-connector {
+    display: flex;
+    align-items: center;
+    height: 24px;
+    position: relative;
+    z-index: 2;
+    padding-left: calc(74px + 16px);
+  }
+  .referral-diagram-wrap .rdm-conn-line {
+    width: 1px;
+    height: 24px;
+    background: rgba(255,255,255,0.16);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .referral-diagram-wrap .rdm-conn-line::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: -3px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #4a5568;
+  }
+  .referral-diagram-wrap .rdm-yes-badge {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #22c55e;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 8px;
+    line-height: 1;
+  }
+  .referral-diagram-wrap .rdm-lane {
+    width: 74px; min-width: 74px;
+    padding-top: 14px;
+    text-align: right;
+    padding-right: 8px;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    color: #8b95a8;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .referral-diagram-wrap .rdm-step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    z-index: 2;
+  }
+  .referral-diagram-wrap .rdm-box {
+    flex: 1;
+    border-radius: 10px;
+    padding: 12px 44px 12px 14px;
+    border: 1px solid transparent;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .referral-diagram-wrap .rdm-box:hover { transform: translateX(3px); }
+  .referral-diagram-wrap .rdm-step-title { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 600; line-height: 1.3; }
+  .referral-diagram-wrap .rdm-step-sub { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.04em; margin-top: 3px; line-height: 1.4; }
+  .referral-diagram-wrap .rdm-info { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border-radius: 50%; border: 1px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.5; transition: opacity 0.2s; }
+  .referral-diagram-wrap .rdm-box:hover .rdm-info { opacity: 1; }
+
+  .rdm-blue   { background: rgba(59,130,246,0.08);   border-color: rgba(59,130,246,0.3); }
+  .rdm-blue:hover { box-shadow: 0 0 0 1px #3b82f6; border-color: #3b82f6; }
+  .rdm-blue   .rdm-step-title { color: #93c5fd; } .rdm-blue   .rdm-step-sub { color: #3b82f6; } .rdm-blue   .rdm-info { color: #3b82f6; }
+
+  .rdm-teal   { background: rgba(20,184,166,0.08);   border-color: rgba(20,184,166,0.3); }
+  .rdm-teal:hover { box-shadow: 0 0 0 1px #14b8a6; border-color: #14b8a6; }
+  .rdm-teal   .rdm-step-title { color: #5eead4; } .rdm-teal   .rdm-step-sub { color: #14b8a6; } .rdm-teal   .rdm-info { color: #14b8a6; }
+
+  .rdm-purple { background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.3); }
+  .rdm-purple:hover { box-shadow: 0 0 0 1px #a78bfa; border-color: #a78bfa; }
+  .rdm-purple .rdm-step-title { color: #c4b5fd; } .rdm-purple .rdm-step-sub { color: #a78bfa; } .rdm-purple .rdm-info { color: #a78bfa; }
+
+  .rdm-coral  { background: rgba(249,115,22,0.08);  border-color: rgba(249,115,22,0.3); }
+  .rdm-coral:hover  { box-shadow: 0 0 0 1px #f97316; border-color: #f97316; }
+  .rdm-coral  .rdm-step-title { color: #fdba74; } .rdm-coral  .rdm-step-sub { color: #f97316; } .rdm-coral  .rdm-info { color: #f97316; }
+
+  .rdm-amber  { background: rgba(245,158,11,0.08);  border-color: rgba(245,158,11,0.3); }
+  .rdm-amber:hover  { box-shadow: 0 0 0 1px #f59e0b; border-color: #f59e0b; }
+  .rdm-amber  .rdm-step-title { color: #fcd34d; } .rdm-amber  .rdm-step-sub { color: #f59e0b; } .rdm-amber  .rdm-info { color: #f59e0b; }
+
+  .rdm-green  { background: rgba(34,197,94,0.08);   border-color: rgba(34,197,94,0.3); }
+  .rdm-green  .rdm-step-title { color: #86efac; } .rdm-green  .rdm-step-sub { color: #22c55e; }
+
+  .referral-diagram-wrap .rdm-tooltip {
+    margin-left: 90px;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.25s ease;
+  }
+  .referral-diagram-wrap .rdm-tooltip.open { max-height: 280px; opacity: 1; margin-top: 6px; margin-bottom: 2px; }
+  .referral-diagram-wrap .rdm-tip-inner {
+    background: #222d42;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 11px;
+    color: #9ca3af;
+    line-height: 1.6;
+  }
+  .referral-diagram-wrap .rdm-tip-inner strong { color: #f0f2f8; font-weight: 600; display: block; margin-bottom: 4px; font-size: 11px; }
+  .referral-diagram-wrap .rdm-tip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .referral-diagram-wrap .rdm-tip-badge { font-size: 9px; letter-spacing: 0.06em; padding: 2px 6px; border-radius: 4px; }
+  .rdm-tb-blue   { background: rgba(59,130,246,0.08);   color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
+  .rdm-tb-teal   { background: rgba(20,184,166,0.08);   color: #5eead4; border: 1px solid rgba(20,184,166,0.3); }
+  .rdm-tb-purple { background: rgba(167,139,250,0.08); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.3); }
+  .rdm-tb-amber  { background: rgba(245,158,11,0.08);  color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+  .referral-diagram-wrap .rdm-split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .referral-diagram-wrap .rdm-split-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.09); border-radius: 6px; padding: 8px 10px; }
+  .referral-diagram-wrap .rdm-split-label { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+  .referral-diagram-wrap .rdm-split-item p { font-size: 10px; color: #6b7280; line-height: 1.5; }
+
+  .referral-diagram-wrap .rdm-decision-row { display: flex; align-items: flex-start; gap: 16px; position: relative; z-index: 2; }
+  .referral-diagram-wrap .rdm-decision-spacer { width: 74px; min-width: 74px; padding-right: 8px; padding-top: 14px; text-align: right; font-size: 9px; letter-spacing: 0.06em; color: #8b95a8; text-transform: uppercase; line-height: 1.4; }
+  .referral-diagram-wrap .rdm-gate { flex: 1; border: 1px solid rgba(245,158,11,0.25); border-radius: 10px; background: rgba(245,158,11,0.04); overflow: hidden; }
+  .referral-diagram-wrap .rdm-gate-header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid rgba(245,158,11,0.12); }
+  .referral-diagram-wrap .rdm-gate-title { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 700; color: #fcd34d; }
+  .referral-diagram-wrap .rdm-gate-sub { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: rgba(252,211,77,0.5); margin-left: auto; letter-spacing: 0.04em; }
+  .referral-diagram-wrap .rdm-gate-paths { display: grid; grid-template-columns: 1fr 1fr; }
+  .referral-diagram-wrap .rdm-gate-path { padding: 10px 14px; display: flex; flex-direction: column; gap: 3px; }
+  .referral-diagram-wrap .rdm-gate-path:first-child { border-right: 1px solid rgba(245,158,11,0.1); }
+  .referral-diagram-wrap .rdm-gate-path-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
+  .referral-diagram-wrap .rdm-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .referral-diagram-wrap .rdm-gate-path-desc { font-size: 10px; color: #8b95a8; line-height: 1.5; padding-left: 11px; }
+
+  .rdm-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.07); }
+  .rdm-legend-item { display: flex; align-items: center; gap: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.06em; color: #8b95a8; text-transform: uppercase; }
+  .rdm-legend-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .rdm-hint { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #4a5568; letter-spacing: 0.06em; text-transform: uppercase; margin-left: auto; }
+
+  /* ─── ABOUT ─── */
+  #about {
+    background: var(--navy2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: start;
+    max-width: 780px;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+
+  .data-flow {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 2;
+    color: var(--muted);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .data-flow::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-bright), var(--blue));
+  }
+
+  .data-flow .line-active { color: var(--blue-bright); }
+  .data-flow .line-done { color: #2a5c30; }
+  .data-flow .comment { color: #3a5070; }
+  .data-flow .keyword { color: var(--accent-warm); }
+
+  .flow-node {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(77,143,255,0.08);
+  }
+
+  .flow-node:last-child { border-bottom: none; }
+
+  .flow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .flow-dot.done { background: #2a7a35; }
+  .flow-dot.active { background: var(--blue-bright); box-shadow: 0 0 8px var(--blue); animation: pulse 1.8s ease infinite; }
+  .flow-dot.pending { background: var(--slate); border: 1px solid var(--muted); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--blue); }
+    50% { opacity: 0.5; box-shadow: 0 0 2px var(--blue); }
+  }
+
+  .flow-text { color: var(--text); font-size: 0.75rem; }
+  .flow-tag { margin-left: auto; font-size: 0.6rem; color: var(--muted); }
+
+  .about-points {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    margin-top: 2rem;
+  }
+
+  .about-point {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .about-point-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: var(--blue-dim);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .about-point-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .about-point-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ─── SERVICES ─── */
+  #services {
+    background: var(--navy);
+  }
+
+  .services-narrative {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .svc-item {
+    padding: 2.5rem 2.75rem;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    position: relative;
+    transition: background 0.3s ease;
+    cursor: default;
+  }
+
+  .svc-item:nth-child(even) {
+    border-right: none;
+  }
+
+  .svc-item:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+
+  .svc-item:hover {
+    background: var(--navy2);
+  }
+
+  .svc-item::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--blue), var(--blue-bright));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .svc-item:hover::after {
+    opacity: 1;
+  }
+
+  .svc-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--blue-bright);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 0.9rem;
+    opacity: 0.85;
+  }
+
+  .svc-eyebrow-num {
+    opacity: 0.5;
+  }
+
+  .svc-eyebrow-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--blue-bright);
+    opacity: 0.5;
+  }
+
+  .svc-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.15rem;
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .svc-body {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.85;
+  }
+
+  .svc-body strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--blue-bright);
+    background: rgba(26,108,240,0.1);
+    border: 1px solid rgba(26,108,240,0.2);
+    padding: 0.2rem 0.55rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 760px) {
+    .services-narrative { grid-template-columns: 1fr; }
+    .svc-item { border-right: none !important; }
+    .svc-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+    .svc-item:last-child { border-bottom: none; }
+  }
+
+  /* ─── WHY LDA BANNER ─── */
+  .differentiator {
+    background: linear-gradient(135deg, var(--navy3), var(--slate));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 3rem 3.5rem;
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin-top: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .differentiator::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--blue), var(--blue-bright));
+  }
+
+  .diff-quote {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .diff-quote em { color: var(--blue-bright); font-style: normal; }
+
+  .diff-stat {
+    text-align: center;
+    flex-shrink: 0;
+    padding: 1.5rem 2rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .diff-num {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 2.8rem;
+    color: var(--blue-bright);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .diff-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 0.4rem;
+    line-height: 1.5;
+  }
+
+  /* ─── PRODUCTS ─── */
+  #products {
+    background: var(--navy);
+    border-top: 1px solid var(--border);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .prod-card {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .prod-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26,108,240,0.04), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .prod-card:hover {
+    border-color: rgba(77,143,255,0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+  }
+
+  .prod-card:hover::after { opacity: 1; }
+
+  .prod-featured {
+    border-color: rgba(26,108,240,0.3);
+    background: linear-gradient(135deg, rgba(26,108,240,0.07), var(--navy2));
+  }
+
+  .prod-featured::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-bright));
+  }
+
+  .prod-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+  }
+
+  .prod-icon { font-size: 1.5rem; }
+
+  .prod-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--blue-bright);
+    background: rgba(26,108,240,0.12);
+    border: 1px solid rgba(26,108,240,0.25);
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .prod-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.15rem;
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .prod-tagline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--blue-bright);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+  }
+
+  .prod-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.7;
+    flex: 1;
+    margin-top: 0.25rem;
+  }
+
+  .prod-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .prod-users-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.3rem;
+  }
+
+  .prod-users {
+    font-size: 0.75rem;
+    color: var(--text);
+    opacity: 0.7;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 900px) {
+    .products-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 560px) {
+    .products-grid { grid-template-columns: 1fr; }
+  }
+
+
+  #clients {
+    padding: 3.5rem 4rem;
+    background: var(--navy);
+    border-top: 1px solid var(--border);
+  }
+
+  .clients-label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .clients-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .client-card {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.75rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    text-align: center;
+    transition: all 0.25s ease;
+    cursor: default;
+  }
+
+  .client-card:hover {
+    border-color: rgba(77,143,255,0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  }
+
+  .client-card:hover .client-abbr { color: var(--blue-bright); }
+  .client-card:hover .client-fullname { color: var(--text); }
+
+  .client-abbr {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: rgba(200,216,240,0.55);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    transition: color 0.25s;
+  }
+
+  .client-fullname {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.52rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    transition: color 0.25s;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 700px) {
+    #clients { padding: 2.5rem 2rem; }
+    .clients-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+
+  #testimonials {
+    background: var(--navy2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .tcard {
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .tcard::before {
+    content: '\201C';
+    position: absolute;
+    top: -0.5rem;
+    right: 1.5rem;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 6rem;
+    color: rgba(26,108,240,0.08);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .tcard:hover {
+    border-color: rgba(77,143,255,0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+  }
+
+  .tcard-wide {
+    grid-column: 1 / -1;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .tcard-wide .tcard-quote {
+    font-size: 1.05rem;
+  }
+
+  .tcard-wide .tcard-body {
+    flex: 1;
+    columns: 2;
+    column-gap: 3rem;
+  }
+
+  .tcard-wide .tcard-meta {
+    flex-shrink: 0;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding-left: 0;
+    padding-top: 1rem;
+    margin-left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: unset;
+  }
+
+  .tcard-icon {
+    font-size: 1.4rem;
+  }
+
+  .tcard-quote {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.5;
+  }
+
+  .tcard-body {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .tcard-meta {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tcard-product {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--blue-bright);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .tcard-org {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 760px) {
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .tcard-wide { flex-direction: column; gap: 1rem; }
+    .tcard-wide .tcard-meta { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 1rem; min-width: unset; }
+  }
+
+  /* ─── REQUEST DEMO ─── */
+  #demo {
+    background: var(--navy);
+    border-top: 1px solid var(--border);
+  }
+
+  .demo-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+    background: linear-gradient(135deg, rgba(26,108,240,0.07), rgba(13,21,48,0.8));
+    border: 1px solid rgba(26,108,240,0.25);
+    border-radius: 20px;
+    padding: 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .demo-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-bright), var(--accent-warm), var(--blue-bright), var(--blue));
+  }
+
+  .demo-card::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(26,108,240,0.1), transparent 70%);
+    pointer-events: none;
+  }
+
+  .demo-h2 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .demo-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1.75rem;
+  }
+
+  .demo-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .demo-bullets li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .demo-check {
+    color: var(--blue-bright);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  .demo-form-wrap {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .demo-form-label {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 860px) {
+    .demo-card { grid-template-columns: 1fr; gap: 2.5rem; padding: 2.5rem; }
+  }
+
+  #contact {
+    background: var(--navy2);
+    border-top: 1px solid var(--border);
+  }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .contact-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .contact-icon {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    background: var(--blue-dim);
+  }
+
+  .contact-item-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.25rem;
+  }
+
+  .contact-item-val {
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .contact-form {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-form::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-bright));
+  }
+
+  .form-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.2rem;
+    color: var(--white);
+    margin-bottom: 1.75rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  input, textarea, select {
+    background: rgba(10,15,30,0.6);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--blue);
+    background: rgba(26,108,240,0.05);
+    box-shadow: 0 0 0 3px rgba(26,108,240,0.1);
+  }
+
+  textarea { resize: vertical; min-height: 110px; }
+
+  select option { background: var(--navy2); }
+
+  .form-submit {
+    width: 100%;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 0.95rem;
+    border-radius: 5px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.2s;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  .form-submit:hover {
+    background: var(--blue-bright);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(26,108,240,0.4);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-left {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .footer-mark {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem;
+    color: var(--blue-bright);
+    font-weight: 700;
+  }
+
+  .footer-copy {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--blue-bright); }
+
+  /* ─── SCROLL PROGRESS BAR ─── */
+  #scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--blue), var(--blue-bright));
+    z-index: 9999;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 8px rgba(106,171,255,0.6);
+  }
+
+  /* ─── STICKY CTA ─── */
+  #sticky-cta {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 500;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1.4rem;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(26,108,240,0.45);
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+  }
+
+  #sticky-cta.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  #sticky-cta:hover {
+    background: var(--blue-bright);
+    box-shadow: 0 12px 32px rgba(26,108,240,0.6);
+    transform: translateY(-2px);
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  #how-it-works {
+    background: var(--navy2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hiw-timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 3rem;
+    position: relative;
+  }
+
+  .hiw-timeline::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-bright), var(--blue));
+    z-index: 0;
+  }
+
+  .hiw-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hiw-node {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--navy3);
+    border: 2px solid var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--blue-bright);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px rgba(45,127,249,0.25);
+    transition: all 0.3s ease;
+  }
+
+  .hiw-step:hover .hiw-node {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 0 30px rgba(45,127,249,0.5);
+    transform: scale(1.08);
+  }
+
+  .hiw-step-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.6rem;
+  }
+
+  .hiw-step-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    .hiw-timeline { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .hiw-timeline::before { display: none; }
+  }
+
+
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 2rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 2rem; }
+    #hero { padding: 7rem 2rem 4rem; }
+    .about-layout, .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .services-narrative { grid-template-columns: 1fr; }
+    .differentiator { flex-direction: column; gap: 2rem; padding: 2rem; }
+    .diff-stat { border-left: none; border-top: 1px solid var(--border); padding: 1.5rem 0 0; }
+    footer { flex-direction: column; align-items: flex-start; padding: 2rem; }
+  }
+
+  @media (max-width: 560px) {
+    .hero-stats { gap: 1.5rem; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+<a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#contact" id="sticky-cta">Get In Touch →</a>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">LDA</div>
+    <div class="nav-logo-full">Lussier Data<br>Architects, Inc.</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#about">About</a></li>
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#services">Services</a></li>
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#solutions">Solutions</a></li>
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#testimonials">Testimonials</a></li>
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#contact" class="nav-cta">Get In Touch</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="pipeline-line"></div>
+    <div class="pipeline-line"></div>
+    <div class="pipeline-line"></div>
+    <div class="pipeline-line"></div>
+  </div>
+
+  <div class="hero-inner">
+
+    <!-- LEFT: Copy -->
+    <div class="hero-content">
+      <div class="hero-eyebrow">Healthcare Data Architecture</div>
+      <h1 class="hero-h1">
+        25 years inside health plans.<br>
+        <span class="italic">Solutions built around how MCOs actually operate.</span>
+      </h1>
+      <p class="hero-sub">
+        LDA develops rapid solutions for the pain points of modern health plan operations - from care management to authorizations, claims, eligibility and everything in between - so your members receive the care they deserve. We prototype fast, deliver faster, and stay on budget. Built by architects who've spent 25+ years operating inside MCOs — not advising from the outside.
+      </p>
+      <div class="hero-actions">
+        <a href="file:///C:/cdn-cgi/l/email-protection#b4dedbdcdad9c1c6c4dccdf4d8c1c7c7ddd1c6d0d5c0d59ad7dbd98bc7c1d6ded1d7c089f8d1c093c794e0d5d8df94e7dbd8c1c0dddbdac7" class="btn-primary">Contact Our Team</a>
+      </div>
+    </div>
+    <div class="hero-diagram">
+      <svg class="pipeline-svg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <fegaussianblur stdDeviation="4" result="blur"></fegaussianblur>
+            <femerge><femergenode in="blur"></femergenode><femergenode in="SourceGraphic"></femergenode></femerge>
+          </filter>
+          <filter id="glow-hub" x="-80%" y="-80%" width="260%" height="260%">
+            <fegaussianblur stdDeviation="10" result="blur"></fegaussianblur>
+            <femerge><femergenode in="blur"></femergenode><femergenode in="SourceGraphic"></femergenode></femerge>
+          </filter>
+          <radialgradient id="hub-fill" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#1e4fc2"></stop>
+            <stop offset="100%" stop-color="#060d1e"></stop>
+          </radialgradient>
+          <radialgradient id="node-fill" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#0f1e3d"></stop>
+            <stop offset="100%" stop-color="#060c1a"></stop>
+          </radialgradient>
+          <radialgradient id="bg-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(26,108,240,0.08)"></stop>
+            <stop offset="100%" stop-color="transparent"></stop>
+          </radialgradient>
+        </defs>
+
+        <!-- Background ambient glow -->
+        <circle cx="250" cy="250" r="230" fill="url(#bg-glow)"></circle>
+
+        <!-- Outer orbit ring -->
+        <circle cx="250" cy="250" r="188" fill="none" stroke="rgba(77,143,255,0.08)" stroke-width="1" stroke-dasharray="3 6"></circle>
+
+        <!-- Inner orbit ring -->
+        <circle cx="250" cy="250" r="100" fill="none" stroke="rgba(77,143,255,0.12)" stroke-width="1" stroke-dasharray="3 5"></circle>
+
+        <!-- Spoke lines: hub → outer nodes -->
+        <line x1="250" y1="250" x2="360.5" y2="97.9" stroke="rgba(77,143,255,0.13)" stroke-width="1" stroke-dasharray="4 5"><animate attributeName="stroke-dashoffset" from="90" to="0" dur="2.5s" repeatCount="indefinite"></animate></line>
+        <line x1="250" y1="250" x2="139.5" y2="97.9" stroke="rgba(77,143,255,0.13)" stroke-width="1" stroke-dasharray="4 5"><animate attributeName="stroke-dashoffset" from="90" to="0" dur="2.5s" repeatCount="indefinite"></animate></line>
+        <line x1="250" y1="250" x2="71.2" y2="220.0" stroke="rgba(77,143,255,0.13)" stroke-width="1" stroke-dasharray="4 5"><animate attributeName="stroke-dashoffset" from="90" to="0" dur="2.5s" repeatCount="indefinite"></animate></line>
+        <line x1="250" y1="250" x2="250.0" y2="370.0" stroke="rgba(77,143,255,0.13)" stroke-width="1" stroke-dasharray="4 5"><animate attributeName="stroke-dashoffset" from="90" to="0" dur="2.5s" repeatCount="indefinite"></animate></line>
+        <line x1="250" y1="250" x2="428.8" y2="220.0" stroke="rgba(77,143,255,0.13)" stroke-width="1" stroke-dasharray="4 5"><animate attributeName="stroke-dashoffset" from="90" to="0" dur="2.5s" repeatCount="indefinite"></animate></line>
+        <line x1="250" y1="250" x2="250.0" y2="150.0" stroke="rgba(77,143,255,0.22)" stroke-width="1.2" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="80" to="0" dur="1.8s" repeatCount="indefinite"></animate></line>
+        <line x1="250" y1="250" x2="163.4" y2="300.0" stroke="rgba(77,143,255,0.22)" stroke-width="1.2" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="80" to="0" dur="1.8s" repeatCount="indefinite"></animate></line>
+        <line x1="250" y1="250" x2="336.6" y2="300.0" stroke="rgba(77,143,255,0.22)" stroke-width="1.2" stroke-dasharray="4 4"><animate attributeName="stroke-dashoffset" from="80" to="0" dur="1.8s" repeatCount="indefinite"></animate></line>
+
+        <!-- ── OUTER NODE PACKETS ── -->
+        <path id="p1a" d="M 360.5,97.9 L 250,250" fill="none"></path>
+        <path id="p1b" d="M 250,250 L 360.5,97.9" fill="none"></path>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin="0.0s" repeatCount="indefinite"></animate>
+          <animatemotion dur="1.8s" begin="0.0s" repeatCount="indefinite"><mpath href="#p1a"></mpath></animatemotion>
+        </circle>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin="0.9s" repeatCount="indefinite"></animate>
+          <animatemotion dur="1.8s" begin="0.9s" repeatCount="indefinite"><mpath href="#p1b"></mpath></animatemotion>
+        </circle>
+        <path id="p2a" d="M 139.5,97.9 L 250,250" fill="none"></path>
+        <path id="p2b" d="M 250,250 L 139.5,97.9" fill="none"></path>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="2.1s" begin="0.6s" repeatCount="indefinite"></animate>
+          <animatemotion dur="2.1s" begin="0.6s" repeatCount="indefinite"><mpath href="#p2a"></mpath></animatemotion>
+        </circle>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="2.1s" begin="1.6s" repeatCount="indefinite"></animate>
+          <animatemotion dur="2.1s" begin="1.6s" repeatCount="indefinite"><mpath href="#p2b"></mpath></animatemotion>
+        </circle>
+        <path id="p3a" d="M 71.2,220.0 L 250,250" fill="none"></path>
+        <path id="p3b" d="M 250,250 L 71.2,220.0" fill="none"></path>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="2.4s" begin="1.2s" repeatCount="indefinite"></animate>
+          <animatemotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#p3a"></mpath></animatemotion>
+        </circle>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="2.4s" begin="2.4s" repeatCount="indefinite"></animate>
+          <animatemotion dur="2.4s" begin="2.4s" repeatCount="indefinite"><mpath href="#p3b"></mpath></animatemotion>
+        </circle>
+        <path id="p4a" d="M 250.0,370.0 L 250,250" fill="none"></path>
+        <path id="p4b" d="M 250,250 L 250.0,370.0" fill="none"></path>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="2.7s" begin="1.8s" repeatCount="indefinite"></animate>
+          <animatemotion dur="2.7s" begin="1.8s" repeatCount="indefinite"><mpath href="#p4a"></mpath></animatemotion>
+        </circle>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="2.7s" begin="3.2s" repeatCount="indefinite"></animate>
+          <animatemotion dur="2.7s" begin="3.2s" repeatCount="indefinite"><mpath href="#p4b"></mpath></animatemotion>
+        </circle>
+        <path id="p5a" d="M 428.8,220.0 L 250,250" fill="none"></path>
+        <path id="p5b" d="M 250,250 L 428.8,220.0" fill="none"></path>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="3.0s" begin="2.4s" repeatCount="indefinite"></animate>
+          <animatemotion dur="3.0s" begin="2.4s" repeatCount="indefinite"><mpath href="#p5a"></mpath></animatemotion>
+        </circle>
+        <circle r="2.8" fill="#4d8fff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="3.0s" begin="3.9s" repeatCount="indefinite"></animate>
+          <animatemotion dur="3.0s" begin="3.9s" repeatCount="indefinite"><mpath href="#p5b"></mpath></animatemotion>
+        </circle>
+
+        <!-- ── INNER NODE PACKETS ── -->
+        <path id="p6a" d="M 250.0,150.0 L 250,250" fill="none"></path>
+        <path id="p6b" d="M 250,250 L 250.0,150.0" fill="none"></path>
+        <circle r="3.2" fill="#7ab0ff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.4s" begin="0.0s" repeatCount="indefinite"></animate>
+          <animatemotion dur="1.4s" begin="0.0s" repeatCount="indefinite"><mpath href="#p6a"></mpath></animatemotion>
+        </circle>
+        <circle r="3.2" fill="#7ab0ff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.4s" begin="0.7s" repeatCount="indefinite"></animate>
+          <animatemotion dur="1.4s" begin="0.7s" repeatCount="indefinite"><mpath href="#p6b"></mpath></animatemotion>
+        </circle>
+        <path id="p7a" d="M 163.4,300.0 L 250,250" fill="none"></path>
+        <path id="p7b" d="M 250,250 L 163.4,300.0" fill="none"></path>
+        <circle r="3.2" fill="#7ab0ff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.6s" begin="0.5s" repeatCount="indefinite"></animate>
+          <animatemotion dur="1.6s" begin="0.5s" repeatCount="indefinite"><mpath href="#p7a"></mpath></animatemotion>
+        </circle>
+        <circle r="3.2" fill="#7ab0ff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.6s" begin="1.3s" repeatCount="indefinite"></animate>
+          <animatemotion dur="1.6s" begin="1.3s" repeatCount="indefinite"><mpath href="#p7b"></mpath></animatemotion>
+        </circle>
+        <path id="p8a" d="M 336.6,300.0 L 250,250" fill="none"></path>
+        <path id="p8b" d="M 250,250 L 336.6,300.0" fill="none"></path>
+        <circle r="3.2" fill="#7ab0ff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin="1.0s" repeatCount="indefinite"></animate>
+          <animatemotion dur="1.8s" begin="1.0s" repeatCount="indefinite"><mpath href="#p8a"></mpath></animatemotion>
+        </circle>
+        <circle r="3.2" fill="#7ab0ff" filter="url(#glow)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin="1.9s" repeatCount="indefinite"></animate>
+          <animatemotion dur="1.8s" begin="1.9s" repeatCount="indefinite"><mpath href="#p8b"></mpath></animatemotion>
+        </circle>
+
+        <!-- ── OUTER NODES ── -->
+        <circle cx="360.5" cy="97.9" r="36" fill="url(#node-fill)" stroke="rgba(77,143,255,0.3)" stroke-width="1.3"></circle>
+        <circle cx="360.5" cy="97.9" r="28" fill="none" stroke="rgba(77,143,255,0.08)" stroke-width="1"></circle>
+        <text x="360.5" y="91.9" class="node-title" font-size="10">Letter</text>
+        <text x="360.5" y="103.9" class="node-title" font-size="10">Generator</text>
+        <text x="360.5" y="115.9" class="node-label">Comms</text>
+        <circle cx="139.5" cy="97.9" r="36" fill="url(#node-fill)" stroke="rgba(77,143,255,0.3)" stroke-width="1.3"></circle>
+        <circle cx="139.5" cy="97.9" r="28" fill="none" stroke="rgba(77,143,255,0.08)" stroke-width="1"></circle>
+        <text x="139.5" y="91.9" class="node-title" font-size="10">Closed Loop</text>
+        <text x="139.5" y="103.9" class="node-title" font-size="10">Referral</text>
+        <text x="139.5" y="115.9" class="node-label">CLR Mgmt</text>
+        <circle cx="71.2" cy="220.0" r="36" fill="url(#node-fill)" stroke="rgba(77,143,255,0.3)" stroke-width="1.3"></circle>
+        <circle cx="71.2" cy="220.0" r="28" fill="none" stroke="rgba(77,143,255,0.08)" stroke-width="1"></circle>
+        <text x="71.2" y="214.0" class="node-title" font-size="10">Provider</text>
+        <text x="71.2" y="228.0" class="node-label">Onboarding</text>
+        <circle cx="250.0" cy="370.0" r="36" fill="url(#node-fill)" stroke="rgba(77,143,255,0.3)" stroke-width="1.3"></circle>
+        <circle cx="250.0" cy="370.0" r="28" fill="none" stroke="rgba(77,143,255,0.08)" stroke-width="1"></circle>
+        <text x="250.0" y="364.0" class="node-title" font-size="10">Policy</text>
+        <text x="250.0" y="376.0" class="node-title" font-size="10">Mgmt</text>
+        <text x="250.0" y="388.0" class="node-label">Compliance</text>
+        <circle cx="428.8" cy="220.0" r="36" fill="url(#node-fill)" stroke="rgba(77,143,255,0.3)" stroke-width="1.3"></circle>
+        <circle cx="428.8" cy="220.0" r="28" fill="none" stroke="rgba(77,143,255,0.08)" stroke-width="1"></circle>
+        <text x="428.8" y="212.0" class="node-title" font-size="10">Contract</text>
+        <text x="428.8" y="224.0" class="node-title" font-size="10">Mgmt</text>
+        <text x="428.8" y="236.0" class="node-label">Vendor Mgmt</text>
+
+        <!-- ── INNER NODES ── -->
+        <circle cx="250.0" cy="150.0" r="42" fill="url(#node-fill)" stroke="rgba(77,143,255,0.45)" stroke-width="1.6"></circle>
+        <circle cx="250.0" cy="150.0" r="32" fill="none" stroke="rgba(77,143,255,0.1)" stroke-width="1"></circle>
+        <text x="250.0" y="145.0" class="node-title" font-size="11">CareStat</text>
+        <text x="250.0" y="160.0" class="node-label">Care Mgmt</text>
+        <circle cx="163.4" cy="300.0" r="42" fill="url(#node-fill)" stroke="rgba(77,143,255,0.45)" stroke-width="1.6"></circle>
+        <circle cx="163.4" cy="300.0" r="32" fill="none" stroke="rgba(77,143,255,0.1)" stroke-width="1"></circle>
+        <text x="163.4" y="291.0" class="node-title" font-size="10">AuthStat</text>
+        <text x="163.4" y="303.0" class="node-title" font-size="10">Mgmt System</text>
+        <text x="163.4" y="315.0" class="node-label">Authorizations</text>
+        <circle cx="336.6" cy="300.0" r="42" fill="url(#node-fill)" stroke="rgba(77,143,255,0.45)" stroke-width="1.6"></circle>
+        <circle cx="336.6" cy="300.0" r="32" fill="none" stroke="rgba(77,143,255,0.1)" stroke-width="1"></circle>
+        <text x="336.6" y="291.0" class="node-title" font-size="10">ClaimStat</text>
+        <text x="336.6" y="303.0" class="node-title" font-size="10">Mgmt System</text>
+        <text x="336.6" y="315.0" class="node-label">Claims</text>
+
+        <!-- ── CENTER HUB ── -->
+        <!-- Animated pulse rings -->
+        <circle cx="250" cy="250" r="58" fill="none" stroke="rgba(77,143,255,0.2)" stroke-width="1">
+          <animate attributeName="r" values="58;74;58" dur="3s" repeatCount="indefinite"></animate>
+          <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" repeatCount="indefinite"></animate>
+        </circle>
+        <circle cx="250" cy="250" r="58" fill="none" stroke="rgba(77,143,255,0.08)" stroke-width="1">
+          <animate attributeName="r" values="58;85;58" dur="3s" begin="0.5s" repeatCount="indefinite"></animate>
+          <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" begin="0.5s" repeatCount="indefinite"></animate>
+        </circle>
+        <!-- Hub body -->
+        <circle cx="250" cy="250" r="52" fill="url(#hub-fill)" stroke="rgba(77,143,255,0.7)" stroke-width="2" filter="url(#glow-hub)"></circle>
+        <!-- Hub inner ring -->
+        <circle cx="250" cy="250" r="40" fill="none" stroke="rgba(77,143,255,0.2)" stroke-width="1"></circle>
+        <!-- Hub text -->
+        <text x="250" y="244" font-family="Libre Baskerville, serif" font-size="16" font-weight="700" fill="#e8f0ff" text-anchor="middle">LDA</text>
+        <text x="250" y="258" font-family="IBM Plex Mono, monospace" font-size="6" fill="#4d8fff" text-anchor="middle" letter-spacing="2" text-transform="uppercase">PROGRAM</text>
+        <text x="250" y="267" font-family="IBM Plex Mono, monospace" font-size="6" fill="#4d8fff" text-anchor="middle" letter-spacing="2" text-transform="uppercase">SOLUTIONS</text>
+        <!-- Pulsing center dot -->
+        <circle cx="250" cy="272" r="2.5" fill="#4d8fff">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"></animate>
+        </circle>
+
+      </svg>
+    </div>
+
+  </div>
+
+  <!-- Full-width stats row -->
+  <div class="hero-stats-row">
+    <div class="stat-item" style="flex: 1;">
+      <div class="stat-num">25<span>+</span></div>
+      <div class="stat-label">Years inside<br>MCO operations</div>
+    </div>
+    <div class="stat-item" style="flex: 1;">
+      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-label">Audit-ready by design,<br>targeted for workflow pain points</div>
+    </div>
+    <div class="stat-item" style="flex: 1;">
+      <div class="stat-num">1,000<span>+</span></div>
+      <div class="stat-label">Solutions<br>deployed</div>
+    </div>
+    <div class="stat-item" style="flex: 1; border-left: 1px solid var(--border); padding-left: 2rem;">
+      <div style="font-family: &#39;Libre Baskerville&#39;, serif; font-size: 1.1rem; font-style: italic; color: var(--white); line-height: 1.4; margin-bottom: 0.3rem;">"The LDA team is the secret sauce."</div>
+      <div style="font-family: &#39;IBM Plex Mono&#39;, monospace; font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em;">— Claims Director of trusted Health Plan partner</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ABOUT --><!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-layout">
+      <div>
+        <div class="section-tag">About LDA</div>
+        <h2 class="section-h2">Agile Engineering Team. Fast delivery. No bureaucracy.</h2>
+        <p class="section-lead">
+          We're not a one-hit wonder — we're the team health plans call when they have a problem and need it solved fast. LDA operates as a focused, senior-only response unit: we on-ramp quickly, move at the speed your deadlines demand, and deliver within budget. Every engagement is handled by the architects who scoped it — no handoffs, no delays, no surprises.
+        </p>
+        <div class="about-points">
+          <div class="about-point">
+            <div class="about-point-icon">🏗️</div>
+            <div>
+              <div class="about-point-title">Tailored to you. Delivered at pace.</div>
+              <div class="about-point-desc">Every engagement starts from your data model, your regulatory obligations, and your existing stack. We scope quickly, build precisely, and ship solutions that fit — without the drawn-out implementation timelines of larger vendors.</div>
+            </div>
+          </div>
+          <div class="about-point">
+            <div class="about-point-icon">⚡</div>
+            <div>
+              <div class="about-point-title">Rapid prototypes. Real compliance deadlines met.</div>
+              <div class="about-point-desc">When an audit is approaching or a regulatory deadline is weeks away, we move. We build working prototypes fast, iterate in real time, and deliver production-ready solutions within the timeframes that matter — not the ones that are convenient.</div>
+            </div>
+          </div>
+          <div class="about-point">
+            <div class="about-point-icon">🤝</div>
+            <div>
+              <div class="about-point-title">Lean team. Immediate response.</div>
+              <div class="about-point-desc">We operate as a direct extension of your team — not a vendor you escalate tickets to. When regulations shift or a critical workflow breaks, you reach us directly and we already know the context. No account managers. No queue.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <div class="section-tag">What We Build</div>
+    <h2 class="section-h2">End-to-end MCO infrastructure. Delivered fast.</h2>
+    <p class="section-lead">From member eligibility to final claim payment — LDA engineers the infrastructure that connects every step. We move at the speed your operations require, without replacing the systems you've already invested in.</p>
+
+    <div class="services-narrative">
+
+      <div class="svc-item" style="grid-column: 1 / -1;">
+        <div class="svc-eyebrow">
+          <span class="svc-eyebrow-num">01</span>
+          <span class="svc-eyebrow-dot"></span>
+          <span>Data Infrastructure &amp; Integration</span>
+        </div>
+        <div class="svc-title">One integration layer. Every system your MCO runs on.</div>
+        <p class="svc-body">MCOs typically operate across five to ten platforms with no shared data layer. LDA builds the integration infrastructure that connects them — pulling eligibility, prior auth, care management, claims, and provider data into a single queryable environment. We work with <strong>ETL pipelines, REST and SOAP APIs, HL7 ADT feeds, and FHIR interfaces</strong>, inside your existing stack. Staff stop reconciling across systems. Leadership stops asking which number is right.</p>
+      </div>
+
+      <div class="svc-item">
+        <div class="svc-eyebrow">
+          <span class="svc-eyebrow-num">02</span>
+          <span class="svc-eyebrow-dot"></span>
+          <span>Workflow Automation &amp; Operations</span>
+        </div>
+        <div class="svc-title">Authorization to payment — with your rules encoded at every step.</div>
+        <p class="svc-body">LDA builds the operational layer your MCO runs on: <strong>prior auth routing</strong> with embedded clinical criteria and TAT enforcement, <strong>claims processing workflows</strong> wrapped around your adjudication engine, <strong>closed-loop referral management</strong> between care teams and providers, and <strong>auto-generated member correspondence</strong> at each decision point. Deadlines, payer rules, and regulatory requirements are built into the system — not left to staff memory.</p>
+      </div>
+
+      <div class="svc-item">
+        <div class="svc-eyebrow">
+          <span class="svc-eyebrow-num">03</span>
+          <span class="svc-eyebrow-dot"></span>
+          <span>Custom Development &amp; Analytics</span>
+        </div>
+        <div class="svc-title">Custom database applications and reporting — where vendor tools stop.</div>
+        <p class="svc-body">LDA builds database applications from the schema up — designed for healthcare data complexity, CMS audit requirements, and real production load. We deliver <strong>HEDIS measure sets, CMS encounter data packages, state regulatory submissions</strong>, and operational dashboards that run directly from source systems. When your vendor's configuration limits are the bottleneck — authorization logic, integration scope, reporting depth — we build what the platform can't.</p>
+      </div>
+
+    </div>
+
+    <div style="margin-top: 3.5rem; padding-top: 3rem; border-top: 1px solid var(--border);">
+      <div class="section-tag" style="margin-bottom: 1rem;">How We Engage</div>
+      <h3 style="font-size: 1.4rem; font-weight: 700; color: var(--white); margin-bottom: 0.75rem;">From problem to production — fast.</h3>
+      <p style="font-size: 0.95rem; color: var(--muted); margin-bottom: 2.5rem; max-width: 620px;">Every LDA engagement follows the same disciplined approach: understand your environment deeply, build precisely, and deliver within your timeline and budget.</p>
+      <div class="hiw-timeline">
+        <div class="hiw-step">
+          <div class="hiw-node">01</div>
+          <div class="hiw-step-title">Discovery &amp; Scoping</div>
+          <div class="hiw-step-desc">We learn your workflows, regulatory obligations, existing stack, and pain points before writing a single line of code. Fast on-ramp, zero assumptions.</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-node">02</div>
+          <div class="hiw-step-title">Rapid Prototyping</div>
+          <div class="hiw-step-desc">We build working prototypes quickly and iterate in real time with your team — so you can see and shape the solution before full build-out.</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-node">03</div>
+          <div class="hiw-step-title">Build &amp; Integration</div>
+          <div class="hiw-step-desc">Production-ready development against your actual data model, compliance requirements, and connected systems — on time and within budget.</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-node">04</div>
+          <div class="hiw-step-title">Ongoing Partnership</div>
+          <div class="hiw-step-desc">We stay in the system. When regulations shift, workflows change, or new needs emerge — we respond immediately as a direct extension of your team.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="differentiator">
+      <div class="diff-quote">
+        "We build the infrastructure your teams use every day — and when regulations change, deadlines shift, or edge cases surface, we respond immediately. We thrive in short delivery windows and tight budgets. That's not a constraint for us. It's how we operate."<br><br>
+        <span style="font-size: 1.1rem; color: var(--blue-bright); font-style: normal; font-weight: 600;">Swift on-ramp. Senior architects. Built around your workflows.</span>
+      </div>
+      <div class="diff-stat">
+        <div class="diff-num">25+</div>
+        <div class="diff-label">Years of MCO<br>domain expertise</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="solutions">
+  <div class="section-inner">
+    <div class="section-tag">Our Solutions</div>
+    <h2 class="section-h2">No two health plans are the same. Neither are our solutions.</h2>
+    <p class="section-lead">Here are some examples of what we've built and deployed for our clients:</p>
+
+    <div class="products-grid">
+
+      <div class="prod-card">
+        <div class="prod-header">
+          <div class="prod-icon">🔍</div>
+        </div>
+        <div class="prod-name">Audit Tracker</div>
+        <div class="prod-tagline">Claims stratification &amp; live audit review</div>
+        <div class="prod-desc">Stratifies and pulls randomized claims samples based on configurable variables and thresholds, making them immediately available for audit and review across multiple teams in a live, collaborative setting. Replaces manual sampling with a repeatable, defensible process that surfaces risk before it becomes a finding.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">Claims · Compliance · UM</div>
+        </div>
+      </div>
+
+      <div class="prod-card prod-featured">
+        <div class="prod-header">
+          <div class="prod-icon">⚖️</div>
+          <div class="prod-badge">Core Platform</div>
+        </div>
+        <div class="prod-name">AuthStat Management System</div>
+        <div class="prod-tagline">Authorization &amp; eligibility intelligence</div>
+        <div class="prod-desc">Provides a unified view of authorization status and eligibility data across UM, Claims, Finance, and clinical programs. Reduces duplicate lookups, surfaces TAT exposure, and supports concurrent review and appeals workflows without toggling between systems.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">UM · Claims · Finance · Behavioral Health · CCS · RX</div>
+        </div>
+      </div>
+
+      <div class="prod-card prod-featured">
+        <div class="prod-header">
+          <div class="prod-icon">📋</div>
+          <div class="prod-badge">Core Platform</div>
+        </div>
+        <div class="prod-name">CareStat Management System</div>
+        <div class="prod-tagline">Whole-person care management</div>
+        <div class="prod-desc">Consolidates member data from multiple source systems into a single care management platform. Supports individualized, risk-stratified care planning, HRA workflows, and proactive case management for high-acuity members across BSI, ICM, and ECM programs.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">Member Services · CareAdvantage · BSI · ICM · ECM</div>
+        </div>
+      </div>
+
+      <div class="prod-card prod-featured">
+        <div class="prod-header">
+          <div class="prod-icon">🧾</div>
+          <div class="prod-badge">Core Platform</div>
+        </div>
+        <div class="prod-name">ClaimStat Management System</div>
+        <div class="prod-tagline">Claims operations, recoveries &amp; financial workflows</div>
+        <div class="prod-desc">Centralized claims operations platform covering adjudication support, provider communication, and financial workflows — with audit trail, exception queuing, and TAT tracking built in. Extended functionality supports Recoveries (overpayment tracking and repayment status), Collections (outstanding balance management and resolution workflows), and PCI — Provider Check Inquiry — a structured intake and routing workflow for provider-initiated payment inquiries that reduces inbound call volume and resolution lag.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">Claims · UM · Finance · Provider Relations</div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-header">
+          <div class="prod-icon">🗂️</div>
+        </div>
+        <div class="prod-name">Client Administration Management System</div>
+        <div class="prod-tagline">Client data, billing &amp; SLA oversight</div>
+        <div class="prod-desc">Centralizes client administration across pricing, billing, enrollment counts, transition credits, and RX rebate tracking for self-insured clients — giving Sales, Customer Success, and Leadership a single source of truth for SLA performance, financial obligations, and population-level metrics.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">Sales · Customer Success · Leadership/Ops · Grievance &amp; Appeals</div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-header">
+          <div class="prod-icon">🔄</div>
+        </div>
+        <div class="prod-name">Closed Loop Referral Management System</div>
+        <div class="prod-tagline">Referral intake, tracking &amp; auth linkage</div>
+        <div class="prod-desc">Manages referral intake, routing, authorization linkage, and status tracking across UM, ECM, Behavioral Health, and Dental. Closes referral gaps, reduces manual handoffs between care teams and providers, and surfaces overdue referrals before they become compliance issues.</div>
+        <button class="workflow-btn" onclick="openReferralModal()">
+          <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1"></circle>
+            <path d="M4.5 6h3M6 4.5 7.5 6 6 7.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          View Workflow
+        </button>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">UM · BSI · Dental · ECM · Behavioral Health</div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-header">
+          <div class="prod-icon">📝</div>
+        </div>
+        <div class="prod-name">Contract Management System</div>
+        <div class="prod-tagline">Vendor &amp; provider contract management</div>
+        <div class="prod-desc">Centralizes vendor and provider contracts with automated review cycles, expiration alerts, and renewal workflows. Replaces spreadsheet tracking with a structured record that surfaces contract risk before it becomes a compliance or budget problem.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">MCO Org-Wide</div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-header">
+          <div class="prod-icon">✉️</div>
+        </div>
+        <div class="prod-name">LetterGenerator</div>
+        <div class="prod-tagline">Centralized member communications</div>
+        <div class="prod-desc">Generates member and provider correspondence directly from live system data — NOAs, denial letters, EOBs, and regulatory notices. Supports multi-language output, preferred format delivery, and version-controlled templates to maintain compliance across regulatory changes.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">MCO Org-Wide</div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-header">
+          <div class="prod-icon">🪪</div>
+        </div>
+        <div class="prod-name">Member Services Management System</div>
+        <div class="prod-tagline">Enrollment &amp; regulatory correspondence</div>
+        <div class="prod-desc">Tracks enrollment status changes, eligibility gaps, and regulatory correspondence in real time. Supports DHCS and CMS continuity-of-coverage requirements, auto-generates required notices, and flags members at risk of losing coverage before disenrollment occurs.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">Member Services · Medicare Advantage</div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-header">
+          <div class="prod-icon">📁</div>
+        </div>
+        <div class="prod-name">Policy Management System</div>
+        <div class="prod-tagline">Org-wide policy governance</div>
+        <div class="prod-desc">Stores organizational policies as structured, versioned records with ownership, review schedules, and change history. Replaces static document libraries with a searchable, audit-ready governance system that reflects your current regulatory posture.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">MCO Org-Wide</div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-header">
+          <div class="prod-icon">🌐</div>
+        </div>
+        <div class="prod-name">Provider Onboarding</div>
+        <div class="prod-tagline">Provider self-service &amp; data exchange</div>
+        <div class="prod-desc">Gives providers a single interface to submit claims, request authorizations, verify member eligibility, and track status — without calling into UM or Claims. Provider-submitted data is automatically processed and routed to the correct internal MCO teams, triggering targeted workflows so each department receives exactly what they need to act. Reduces provider abrasion, cuts inbound call volume, and shortens authorization turnaround for routine requests.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">Provider Services · IT</div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-header">
+          <div class="prod-icon">🛡️</div>
+        </div>
+        <div class="prod-name">Underwriting Management System</div>
+        <div class="prod-tagline">Risk evaluation, pricing &amp; portfolio oversight</div>
+        <div class="prod-desc">Supports end-to-end underwriting operations — from evaluating member risk profiles and structuring coverage terms to setting premiums and monitoring portfolio-wide loss trends. Consolidates claims history, compliance data, and financial exposures into a single workspace so underwriters can price accurately, manage concentration risk, and coordinate loss prevention across the membership pool.</div>
+        <div class="prod-footer">
+          <div class="prod-users-label">Used by</div>
+          <div class="prod-users">Underwriting · Finance · Claims</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section id="clients">
+  <div class="section-inner">
+    <div class="clients-label">Trusted by leading health plans &amp; MCOs</div>
+    <div class="clients-grid">
+      <div class="client-card">
+        <span class="client-abbr">HPSM</span>
+        <span class="client-fullname">Health Plan of<br>San Mateo</span>
+        <span style="font-family:&#39;IBM Plex Mono&#39;,monospace; font-size:0.5rem; color:var(--blue-bright); background:rgba(26,108,240,0.1); border:1px solid rgba(26,108,240,0.2); padding:0.15rem 0.45rem; border-radius:3px; letter-spacing:0.08em; text-transform:uppercase;">NCQA Accredited · 4.5★ Medicaid</span>
+      </div>
+      <div class="client-card">
+        <span class="client-abbr">AAH</span>
+        <span class="client-fullname">Alameda Alliance<br>for Health</span>
+        <span style="font-family:&#39;IBM Plex Mono&#39;,monospace; font-size:0.5rem; color:var(--blue-bright); background:rgba(26,108,240,0.1); border:1px solid rgba(26,108,240,0.2); padding:0.15rem 0.45rem; border-radius:3px; letter-spacing:0.08em; text-transform:uppercase;">NCQA Accredited</span>
+      </div>
+      <div class="client-card">
+        <span class="client-abbr">TMRRG</span>
+        <span class="client-fullname">The Mutual Risk<br>Retention Group</span>
+        <span style="font-family:&#39;IBM Plex Mono&#39;,monospace; font-size:0.5rem; color:var(--blue-bright); background:rgba(26,108,240,0.1); border:1px solid rgba(26,108,240,0.2); padding:0.15rem 0.45rem; border-radius:3px; letter-spacing:0.08em; text-transform:uppercase;">AM Best A (Excellent)</span>
+      </div>
+      <div class="client-card">
+        <span class="client-abbr">CH</span>
+        <span class="client-fullname">Collective<br>Health</span>
+        <span style="font-family:&#39;IBM Plex Mono&#39;,monospace; font-size:0.5rem; color:var(--blue-bright); background:rgba(26,108,240,0.1); border:1px solid rgba(26,108,240,0.2); padding:0.15rem 0.45rem; border-radius:3px; letter-spacing:0.08em; text-transform:uppercase;">NCQA Case Mgmt Accredited</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-inner">
+    <div class="section-tag">Client Voices</div>
+    <h2 class="section-h2">From the teams who use it daily.</h2>
+    <p class="section-lead">Feedback from operational staff, clinical managers, and directors at active LDA client organizations — unedited.</p>
+    <div class="testimonials-grid">
+
+      <div class="tcard tcard-wide">
+        <div class="tcard-quote">"Without them...We'd likely be understaffed — and possibly non-compliant."</div>
+        <div class="tcard-body">CareStat centralizes all necessary data in one place so staff don't need to jump between seven systems to do their work. The automations implemented from Q4 2022 onward removed countless manual steps from our HRA workflow — ensuring cases are clean, compliant, and reportable. Without them, staff would bear the massive burden of memorizing CareStat definitions, MOC/regulatory rules, and deadline equations. We'd likely be understaffed — and possibly non-compliant.</div>
+        <div class="tcard-meta">
+          <div class="tcard-product">CareStat · HRA Workflow Automation</div>
+          <div class="tcard-org">Business Systems Analyst, Trusted Health Plan Partner</div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-icon">🔗</div>
+        <div class="tcard-quote">"LDA plays a critical role here."</div>
+        <div class="tcard-body">From a vendor management perspective though, in-house ops gave us the benefit of direct oversight and full visibility into the entire process from start to finish, as well as the flexibility to tweak systems as we continue learning about the nuances of this work. CareStat plays a critical role here since the HRA/care plan workflows touch a total of seven different systems, and CareStat is ultimately what ties all those systems together.</div>
+        <div class="tcard-meta">
+          <div class="tcard-product">CareStat · Care Plan 2.0</div>
+          <div class="tcard-org">Care Coordination Manager, Trusted Health Plan Partner</div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-icon">⚡</div>
+        <div class="tcard-quote">"Greatly increased quality and efficiency."</div>
+        <div class="tcard-body">Streamlining member and provider data into AuthStat Management System has been invaluable. Previously, we accessed multiple pages and programs to gather data for case management decisions. Having everything in the customer and provider pop-ups has transformed how we work.</div>
+        <div class="tcard-meta">
+          <div class="tcard-product">AuthStat Management System · Member &amp; Provider Data</div>
+          <div class="tcard-org">Inpatient Review Supervisor, Trusted Health Plan Partner</div>
+        </div>
+      </div>
+
+      <div class="tcard tcard-wide">
+        <div class="tcard-quote">"LDA has been our partners in troubleshooting and developing workflow enhancements."</div>
+        <div class="tcard-body">AuthStat Management System made it much easier to run reports, perform audits, and prioritize cases — with flexibility in triaging daily work. The auto-assignment feature replaced a manual task that used to steal time from other priorities. The home health correction TAT automation moved us off Outlook entirely, housing requests in one place and letting us track timeliness effectively.</div>
+        <div class="tcard-meta">
+          <div class="tcard-product">AuthStat Management System · Authorization Management</div>
+          <div class="tcard-org">Utilization Management Supervisor, Trusted Health Plan Partner</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT & DEMO -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-tag">Get In Touch</div>
+    <h2 class="section-h2">Tell us what you're trying to solve.</h2>
+    <p class="section-lead">Legacy integration, a workflow breaking under volume, a reporting gap before an audit — bring us the problem. We respond within one business day, come prepared, and move fast.</p>
+
+    <div class="contact-layout">
+
+      <!-- Left: info + demo bullets -->
+      <div>
+        <div class="contact-info" style="margin-bottom: 2.5rem;">
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div>
+              <div class="contact-item-label">Email</div>
+              <div class="contact-item-val"><a href="file:///C:/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7a13141c153a160f0909131f081e1b0e1b54191517">[email&nbsp;protected]</a></div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div>
+              <div class="contact-item-label">Headquarters</div>
+              <div class="contact-item-val">San Francisco, CA</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">⏱️</div>
+            <div>
+              <div class="contact-item-label">Response Time</div>
+              <div class="contact-item-val">We respond within 1 business day</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🔗</div>
+            <div>
+              <div class="contact-item-label">LinkedIn</div>
+              <div class="contact-item-val"><a href="https://www.linkedin.com/company/lussier-data-architects/" target="_blank" style="color: var(--text); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color=&#39;var(--blue-bright)&#39;" onmouseout="this.style.color=&#39;var(--text)&#39;">Lussier Data Architects</a></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border); padding-top: 2rem;">
+          <div class="section-tag" style="margin-bottom: 0.75rem;">Let's Talk Solutions</div>
+          <p style="font-size: 0.85rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem;">No sales deck. Direct access to the architects who built it — scoped to your workflows, in one call.</p>
+          <ul class="demo-bullets">
+            <li><span class="demo-check">✓</span><span>Walkthrough scoped to your specific workflows — in one call</span></li>
+            <li><span class="demo-check">✓</span><span>Senior architects only — the people who will actually build it</span></li>
+            <li><span class="demo-check">✓</span><span>Rapid prototypes available for tight compliance deadlines</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right: unified form -->
+      <div class="contact-form">
+        <div class="form-title">Send us a message</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Jane">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Smith">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Work Email</label>
+          <input type="email" placeholder="jane@yourorganization.com">
+        </div>
+        <div class="form-group">
+          <label>Organization</label>
+          <input type="text" placeholder="Your MCO or health plan">
+        </div>
+        <div class="form-group">
+          <label>What are you trying to solve?</label>
+          <textarea placeholder="Describe the challenge — integration, workflow, reporting, compliance..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>How can we help?</label>
+          <select>
+            <option value="">Select one...</option>
+            <option>Discuss a Project</option>
+            <option>General Inquiry</option>
+          </select>
+        </div>
+        <button class="form-submit">Get In Touch →</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REFERRAL WORKFLOW MODAL -->
+<div class="referral-modal-overlay" id="referralModal" onclick="closeReferralModalOutside(event)">
+  <div class="referral-modal">
+    <div class="referral-modal-header">
+      <div class="referral-modal-title">
+        <div class="referral-modal-eyebrow">Health Plan Operations · End-to-End Flow</div>
+        <div class="referral-modal-name">Closed Loop Referral Management</div>
+      </div>
+      <button class="referral-modal-close" onclick="closeReferralModal()">✕</button>
+    </div>
+    <div class="referral-modal-body">
+      <div class="referral-diagram-wrap">
+        <div class="rdm-steps">
+
+          <!-- Step 1 -->
+          <div class="rdm-step-row">
+            <div class="rdm-lane">Member / Provider</div>
+            <div class="rdm-box rdm-blue" onclick="rdmToggle(&#39;rm1&#39;)">
+              <span class="rdm-step-title">Member requests specialized service</span>
+              <span class="rdm-step-sub">GP / general provider cannot fulfill request</span>
+              <span class="rdm-info">i</span>
+            </div>
+          </div>
+          <div class="rdm-tooltip" id="rm1">
+            <div class="rdm-tip-inner">
+              <strong>Member service request</strong>
+              The member approaches their GP or general provider needing a service outside that provider's scope — such as dental care, behavioral health support, or community assistance. The GP cannot fulfill this directly and must escalate.
+            </div>
+          </div>
+          <div class="rdm-connector"><div class="rdm-conn-line"></div></div>
+
+          <!-- Step 2 -->
+          <div class="rdm-step-row">
+            <div class="rdm-lane">Provider / Health Plan</div>
+            <div class="rdm-box rdm-teal" onclick="rdmToggle(&#39;rm2&#39;)">
+              <span class="rdm-step-title">Provider contacts Health Plan</span>
+              <span class="rdm-step-sub">Requests assistance sourcing a specialist on behalf of member</span>
+              <span class="rdm-info">i</span>
+            </div>
+          </div>
+          <div class="rdm-tooltip" id="rm2">
+            <div class="rdm-tip-inner">
+              <strong>Provider contacts Health Plan</strong>
+              The requesting provider reaches out to the member's Health Plan, initiating the referral process. They act as the advocate for the member — the Health Plan then takes ownership of finding a suitable servicing provider.
+            </div>
+          </div>
+          <div class="rdm-connector"><div class="rdm-conn-line"></div></div>
+
+          <!-- Step 3 -->
+          <div class="rdm-step-row">
+            <div class="rdm-lane">Provider / Health Plan</div>
+            <div class="rdm-box rdm-teal" onclick="rdmToggle(&#39;rm3&#39;)">
+              <span class="rdm-step-title">Referral form submitted</span>
+              <span class="rdm-step-sub">Routed by service type for processing</span>
+              <span class="rdm-info">i</span>
+            </div>
+          </div>
+          <div class="rdm-tooltip" id="rm3">
+            <div class="rdm-tip-inner">
+              <strong>Service categories</strong>
+              <div class="rdm-tip-row">
+                <span class="rdm-tip-badge rdm-tb-teal">Dental</span>
+                <span class="rdm-tip-badge rdm-tb-purple">Behavioral Health</span>
+                <span class="rdm-tip-badge rdm-tb-blue">Community Supports</span>
+                <span class="rdm-tip-badge rdm-tb-amber">Enhanced Care Mgmt</span>
+              </div>
+              <p style="margin-top:8px;font-size:10px;">The referral form is routed and processed differently based on the service type, triggering the appropriate specialist team and workflow within the Health Plan.</p>
+            </div>
+          </div>
+          <div class="rdm-connector"><div class="rdm-conn-line"></div></div>
+
+          <!-- Step 4 -->
+          <div class="rdm-step-row">
+            <div class="rdm-lane">System</div>
+            <div class="rdm-box rdm-purple" onclick="rdmToggle(&#39;rm4&#39;)">
+              <span class="rdm-step-title">Automated file import</span>
+              <span class="rdm-step-sub">Forms ingested via automated pipeline → actionable database records</span>
+              <span class="rdm-info">i</span>
+            </div>
+          </div>
+          <div class="rdm-tooltip" id="rm4">
+            <div class="rdm-tip-inner">
+              <strong>Automated file import</strong>
+              Submitted referral forms are ingested into the Health Plan's database via an automated pipeline. Each form is parsed and converted into a structured, actionable record — removing manual data entry and reducing processing lag.
+            </div>
+          </div>
+          <div class="rdm-connector"><div class="rdm-conn-line"></div></div>
+
+          <!-- Step 5 -->
+          <div class="rdm-step-row">
+            <div class="rdm-lane">Health Plan</div>
+            <div class="rdm-box rdm-purple" onclick="rdmToggle(&#39;rm5&#39;)">
+              <span class="rdm-step-title">Health Plan specialist outreach</span>
+              <span class="rdm-step-sub">Contacts candidates · documents all communications &amp; updates</span>
+              <span class="rdm-info">i</span>
+            </div>
+          </div>
+          <div class="rdm-tooltip" id="rm5">
+            <div class="rdm-tip-inner">
+              <strong>Specialist outreach loop</strong>
+              Health Plan specialists systematically contact potential servicing providers on behalf of the member. Every outreach attempt, status change, communication, and record update is documented in real time — creating a full audit trail.
+            </div>
+          </div>
+          <div class="rdm-connector"><div class="rdm-conn-line"></div></div>
+
+          <!-- Decision Gate -->
+          <div class="rdm-decision-row">
+            <div class="rdm-decision-spacer">Specialist</div>
+            <div class="rdm-gate">
+              <div class="rdm-gate-header">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.7;flex-shrink:0;">
+                  <path d="M10 2L18 10L10 18L2 10L10 2Z" stroke="#f59e0b" stroke-width="1.2" fill="rgba(245,158,11,0.08)"></path>
+                  <path d="M10 7v4M10 13v.5" stroke="#f59e0b" stroke-width="1.2" stroke-linecap="round"></path>
+                </svg>
+                <span class="rdm-gate-title">Provider found?</span>
+                <span class="rdm-gate-sub">Decision point · outreach loop</span>
+              </div>
+              <div class="rdm-gate-paths">
+                <div class="rdm-gate-path">
+                  <div class="rdm-gate-path-label">
+                    <span class="rdm-dot" style="background:#ef4444"></span>
+                    <span style="color:#fca5a5;">No — continue outreach</span>
+                  </div>
+                  <div class="rdm-gate-path-desc">Return to specialist outreach. Contact next candidate provider, document attempt, repeat until a match is confirmed.</div>
+                </div>
+                <div class="rdm-gate-path">
+                  <div class="rdm-gate-path-label">
+                    <span class="rdm-dot" style="background:#22c55e"></span>
+                    <span style="color:#86efac;">Yes — proceed to closure</span>
+                  </div>
+                  <div class="rdm-gate-path-desc">Servicing provider confirmed. Trigger closure letter generation and distribute to all parties.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="rdm-connector"><div class="rdm-conn-line"></div><span class="rdm-yes-badge">Yes — provider confirmed</span></div>
+
+          <!-- Step 6 -->
+          <div class="rdm-step-row">
+            <div class="rdm-lane">All parties</div>
+            <div class="rdm-box rdm-coral" onclick="rdmToggle(&#39;rm6&#39;)">
+              <span class="rdm-step-title">Closure letters distributed</span>
+              <span class="rdm-step-sub">Member · requesting provider · servicing provider — loop closed</span>
+              <span class="rdm-info">i</span>
+            </div>
+          </div>
+          <div class="rdm-tooltip" id="rm6">
+            <div class="rdm-tip-inner">
+              <strong>Closure letters</strong>
+              Once a servicing provider is confirmed, the Health Plan generates and distributes letters to all three parties. Every stakeholder receives the same current, accurate information — ensuring alignment and officially closing the referral loop.
+            </div>
+          </div>
+          <div class="rdm-connector"><div class="rdm-conn-line"></div></div>
+
+          <!-- Step 7 -->
+          <div class="rdm-step-row">
+            <div class="rdm-lane">Auth team</div>
+            <div class="rdm-box rdm-amber" onclick="rdmToggle(&#39;rm7&#39;)">
+              <span class="rdm-step-title">Authorization review or auto-approval</span>
+              <span class="rdm-step-sub">Triggered on loop closure · enables provider to begin services</span>
+              <span class="rdm-info">i</span>
+            </div>
+          </div>
+          <div class="rdm-tooltip" id="rm7">
+            <div class="rdm-tip-inner">
+              <strong>Two authorization paths</strong>
+              <div class="rdm-split">
+                <div class="rdm-split-item">
+                  <div class="rdm-split-label" style="color:#f59e0b;">Auth review</div>
+                  <p>Manual clinical &amp; admin evaluation of medical necessity, coverage, and credentials. Common for Behavioral Health and Enhanced Care Mgmt.</p>
+                </div>
+                <div class="rdm-split-item">
+                  <div class="rdm-split-label" style="color:#22c55e;">Auto-approval</div>
+                  <p>Bypasses review when pre-set rules are met: low-complexity service, standing plan auth, or preferred network provider.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="rdm-connector"><div class="rdm-conn-line"></div></div>
+
+          <!-- Step 8 -->
+          <div class="rdm-step-row">
+            <div class="rdm-lane">Member</div>
+            <div class="rdm-box rdm-green">
+              <span class="rdm-step-title">Member begins receiving specialized services</span>
+              <span class="rdm-step-sub">Servicing provider contacts member · care delivery initiated</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="rdm-legend">
+          <div class="rdm-legend-item"><div class="rdm-legend-dot" style="background:#3b82f6"></div>Member / Provider</div>
+          <div class="rdm-legend-item"><div class="rdm-legend-dot" style="background:#14b8a6"></div>Health Plan</div>
+          <div class="rdm-legend-item"><div class="rdm-legend-dot" style="background:#a78bfa"></div>System / Specialist</div>
+          <div class="rdm-legend-item"><div class="rdm-legend-dot" style="background:#f97316"></div>Closure</div>
+          <div class="rdm-legend-item"><div class="rdm-legend-dot" style="background:#f59e0b"></div>Authorization</div>
+          <div class="rdm-legend-item"><div class="rdm-legend-dot" style="background:#22c55e"></div>Outcome</div>
+          <div class="rdm-hint">Click any step for details</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-mark">LDA</div>
+    <div class="footer-copy">© 2026 Lussier Data Architects, Inc. All rights reserved.</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#about">About</a></li>
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#services">Services</a></li>
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#solutions">Solutions</a></li>
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#testimonials">Testimonials</a></li>
+    <li><a href="file:///C:/Users/JohnMurphy/AppData/Local/Microsoft/Olk/Attachments/ooa-54bcf405-632d-4436-99e5-ed797bbda69b/829db94639c5b2f5be87978f1629fb488cbf4b4f4473c12809ec05ea8b1b2a30/lda-websitev10.html#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  // ── Scroll Progress Bar ──
+  const progressBar = document.getElementById('scroll-progress');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+  });
+
+  // ── Sticky CTA ──
+  const stickyCta = document.getElementById('sticky-cta');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 600) {
+      stickyCta.classList.add('visible');
+    } else {
+      stickyCta.classList.remove('visible');
+    }
+  });
+
+  // ── Referral Modal ──
+  function openReferralModal() {
+    document.getElementById('referralModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeReferralModal() {
+    document.getElementById('referralModal').classList.remove('open');
+    document.body.style.overflow = '';
+    document.querySelectorAll('.rdm-tooltip.open').forEach(function(p) { p.classList.remove('open'); });
+  }
+  function closeReferralModalOutside(e) {
+    if (e.target === document.getElementById('referralModal')) closeReferralModal();
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeReferralModal();
+  });
+  function rdmToggle(id) {
+    var panel = document.getElementById(id);
+    var isOpen = panel.classList.contains('open');
+    document.querySelectorAll('.rdm-tooltip.open').forEach(function(p) { p.classList.remove('open'); });
+    if (!isOpen) panel.classList.add('open');
+  }
+
+
+
+</body>
+</html></script></body></html>
